@@ -16,31 +16,61 @@
              background-repeat: no-repeat; 
         }
         header {
+             margin: 0px 3%;
             background-color: #d4af37; 
             color: white;
-            padding: 10px;
+            padding: 5px;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            border: 5px solid transparent;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            margin-bottom: 5px;
+            position: relative;
+            overflow: hidden;
         }
-        
-        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 10px;
+            background: linear-gradient(45deg, rgba(212, 175, 55, 0.6), rgba(255, 255, 255, 0.6));
+            filter: blur(8px);
+            z-index: -1;
+            animation: shine 1.5s infinite linear;
+        }
+        @keyframes shine {
+            0% {
+                background-position: -200%;
+            }
+            100% {
+                background-position: 200%;
+            }
+        }
         nav {
-            margin: 20px 0;
+            margin: 18px 0;
+            background-color:#fefefe;
+            padding: 23px;
+            position: relative;
         }
         nav a {
-            margin: 0 15px;
-            color: #333;
+            margin: 0 18px;
+            color:black;
             background-color: #efd170;
             text-decoration: none;
             padding: 10px 15px;
             transition: color 0.3s;
             border-radius: 5px;
             border: 1px solid transparent;
+          
         }
         nav a:hover {
             color: #f71414; 
             border: 1px solid #d4af37;
-            background-color: whitesmoke; 
+            background-color: rgba(212, 175, 55, 0.2); 
+        }
+        .content {
+            text-align:center;
+            padding: 10px 10px;
         }
         .product-grid {
             display: grid;
@@ -141,15 +171,294 @@
 	 </style>
 </head>
 <header>
-    <h1>Jewelry Collection</h1>
-    <nav>
+    <img src="logo2.jpg" style="width: 300px; height: 100px;"> </header>
+    <nav> <center>
+        <a href="website.html">Home</a>
+        <a href="webproduct.html">Products</a>
+        <a href="category.html">Category</a>
+        <a href="webabout.html">About</a>
+    </center>
+    </nav>
+
+<body>
+   
+    <div class="product-grid" id="productGrid">
+        <!-- Jewelry products will be dynamically added here -->
+    </div>
+
+    <div class="detail-view" id="detailView">
+        <h2 id="detailTitle"></h2>
+        <img id="detailImage" src="" alt="Product Image">
+        <p class="price" id="detailPrice"></p>
+        <p id="detailDescription"></p>
+        <div class="button-container">
+            <button id="buyButton">Buy Now</button>
+            <button id="addToCartButton">Add to Cart</button>
+        </div>
+        <span class="back-button" id="backToProductsButton">Back to Products</span>
+    </div>
+
+   
+   
+
+    <script>
+        const products = [
+        { id: 16, title: "Beauty Pageant Crown", price: 89.99, description: "Often ornate and jeweled, awarded to winners of beauty contests.", availableSizes: ["4 inches tall and 7 inches wide"],image: "https://i.pinimg.com/originals/b8/b6/68/b8b66805001d2c19ff2a29570048eb37.jpg" },
+        { id: 17, title: "Prom King/Queen Crown", price: 29.99, description: " Worn by the elected prom royalty at high school dances, usually decorative.", availableSizes: ["3 inches tall and 7 inches wide"],image: "https://m.media-amazon.com/images/I/81ASbz1YBqL.jpg" },
+        { id: 18, title: "Celtic Crown", price: 59.99, description: "A crown designed with Celtic motifs, often used in ceremonies or as a symbol of heritage.", availableSizes: ["2 inches tall and adjustable band"],image: "https://tse2.mm.bing.net/th?id=OIP.31HGIehmK_qWZ5H-76FmowHaFb&pid=Api&P=0&h=180" },
+        { id: 19, title: "Sapphire Crown", price: 29.99, description: "A crown adorned with sapphire gemstones, often used in royal contexts.", availableSizes: ["3 inches tall and adjustable band"],image: "https://tse4.mm.bing.net/th?id=OIP.64iXT05Yichv0GdYYjx17QHaE8&pid=Api&P=0&h=180" },
+        { id: 20, title: "Tiara Crown", price: 89.99, description: "Often worn at formal events, made with gemstones and metal.", availableSizes: ["4 inches tall and 6 in. wide"],image: "https://ae01.alicdn.com/kf/HTB1OK1dSpzqK1RjSZFoq6zfcXXaF/Gold-Crystal-Royal-Bridal-Tiara-Crown-Full-Round-Queen-Vintage-Crown-Women-Prom-Hair-Ornaments-Wedding.jpg" },
+         ];
+
+
+
+        
+        const productGrid = document.getElementById('productGrid');
+        const detailView = document.getElementById('detailView');
+        const detailTitle = document.getElementById('detailTitle');
+        const detailPrice = document.getElementById('detailPrice');
+        const detailDescription = document.getElementById('detailDescription');
+        const detailImage = document.getElementById('detailImage');
+        const buyButton = document.getElementById('buyButton');
+        const addToCartButton = document.getElementById('addToCartButton');
+        const backToProductsButton = document.getElementById('backToProductsButton');
+
+        let cart = [];
+
+        function createProductCard(product) {
+            const card = document.createElement('div');
+            card.classList.add('product');
+            card.innerHTML = `
+                <img src="${product.image}" alt="${product.title}">
+                <h3>${product.title}</h3>
+                <p class="price">$${product.price.toFixed(2)}</p>
+                <p class="description">${product.description}</p>
+                 <p class="sizes">Size: ${product.availableSizes.join(", ")}</p>
+            `;
+            card.onclick = () => showProductDetail(product);
+            productGrid.appendChild(card);
+        }
+
+        function showProductDetail(product) {
+            detailTitle.textContent = product.title;
+            detailPrice.textContent = `$${product.price.toFixed(2)}`;
+            detailDescription.textContent = product.description;
+            detailImage.src = product.image;
+
+            const sizesText = `Available Sizes: ${product.availableSizes.join(", ")}`;
+    const sizeElement = document.createElement('p');
+    sizeElement.textContent = sizesText;
+    sizeElement.className = 'sizes';
+    detailDescription.appendChild(sizeElement);
+
+
+            detailView.style.display = "block";
+            productGrid.style.display = "none"; // Hide product grid
+
+            buyButton.onclick = () => buyNow(product);
+            addToCartButton.onclick = () => addToCart(product);
+        }
+
+        function addToCart(product) {
+            cart.push(product);
+            alert(`${product.title} has been added to your cart!`);
+        }
+
+        function buyNow(product) {
+            alert(`Proceeding to buy ${product.title} for $${product.price.toFixed(2)}.`);
+        }
+
+        backToProductsButton.onclick = () => {
+            detailView.style.display = "none";
+            productGrid.style.display = "grid"; // Show product grid again
+        };
+
+        products.forEach(createProductCard);
+		
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>crown</title>
+    <style>
+        body {
+             font-family: 'Montserrat', sans-serif;
+             margin: 0;
+             padding: 20px;
+             background-color: #f2f2f2;
+             background-image: url('bg2.jpg'); 
+             background-size: cover;
+             background-position: center; 
+             background-repeat: no-repeat; 
+        }
+        header {
+             margin: 0px 3%;
+            background-color: #d4af37; 
+            color: white;
+            padding: 5px;
+            text-align: center;
+            border: 5px solid transparent;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            margin-bottom: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 10px;
+            background: linear-gradient(45deg, rgba(212, 175, 55, 0.6), rgba(255, 255, 255, 0.6));
+            filter: blur(8px);
+            z-index: -1;
+            animation: shine 1.5s infinite linear;
+        }
+        @keyframes shine {
+            0% {
+                background-position: -200%;
+            }
+            100% {
+                background-position: 200%;
+            }
+        }
+        nav {
+            margin: 18px 0;
+            background-color:#fefefe;
+            padding: 23px;
+            position: relative;
+        }
+        nav a {
+            margin: 0 18px;
+            color:black;
+            background-color: #efd170;
+            text-decoration: none;
+            padding: 10px 15px;
+            transition: color 0.3s;
+            border-radius: 5px;
+            border: 1px solid transparent;
+          
+        }
+        nav a:hover {
+            color: #f71414; 
+            border: 1px solid #d4af37;
+            background-color: rgba(212, 175, 55, 0.2); 
+        }
+        .content {
+            text-align:center;
+            padding: 10px 10px;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .product {
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            background-color: white;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 10px;
+        }
+
+        .product:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px gold;
+        }
+
+        .product img {
+            width: 100%;
+            height: auto;
+        }
+
+        .price {
+            font-size: 1.2em;
+            color: black;
+            margin-top: 10px;
+        }
+
+        .description {
+            font-size: 0.9em;
+            color:black;
+            margin-top: 5px;
+        }
+
+        .sizes {
+    font-size: 0.9em;
+    color: #555;
+    margin-top: 5px;
+}
+
+        .detail-view {
+            display:none;
+            padding: 160px;
+            text-align: center;
+            background-color:antiquewhite;
+        }
+
+         .detail-view img {
+            width: 288px; 
+            height: 480px; 
+            max-width: 100%;
+            height: auto;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: transparent;
+            color: black;
+            text-shadow: 0 0 5px gold, 0 0 10px gold;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px red;
+            margin: 0 10px;
+        }
+
+        button:hover {
+            box-shadow: 0 0 20px red, 0 0 30px red;
+            transform: scale(1.1);
+        }
+
+        .back-button {
+            margin-top: 20px;
+            display: block;
+            color: black;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+	 </style>
+</head>
+<header>
+    <img src="logo2.jpg" style="width: 300px; height: 100px;"> </header>
+    <nav> <center>
         <a href="index.html">Home</a>
         <a href="webproduct.html">Products</a>
         <a href="category.html">Category</a>
         <a href="webabout.html">About</a>
-       
+    </center>
     </nav>
-</header>
 
 <body>
    
