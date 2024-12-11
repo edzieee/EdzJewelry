@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>necklace</title>
+    <style>
+        body {
+             font-family: 'Montserrat', sans-serif;
+             margin: 0;
+             padding: 20px;
+             background-color: #f2f2f2;
+             background-image: url('bg2.jpg'); 
+             background-size: cover;
+             background-position: center; 
+             background-repeat: no-repeat; 
+        }
+        header {
+            background-color: #d4af37; 
+            color: white;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        
+        nav {
+            margin: 20px 0;
+        }
+        nav a {
+            margin: 0 15px;
+            color: #333;
+            background-color: #efd170;
+            text-decoration: none;
+            padding: 10px 15px;
+            transition: color 0.3s;
+            border-radius: 5px;
+            border: 1px solid transparent;
+        }
+        nav a:hover {
+            color: #f71414; 
+            border: 1px solid #d4af37;
+            background-color: whitesmoke; 
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .product {
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            background-color: white;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 10px;
+        }
+
+        .product:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px gold;
+        }
+
+        .product img {
+            width: 100%;
+            height: auto;
+        }
+
+        .price {
+            font-size: 1.2em;
+            color: black;
+            margin-top: 10px;
+        }
+
+        .description {
+            font-size: 0.9em;
+            color:black;
+            margin-top: 5px;
+        }
+
+        .sizes {
+    font-size: 0.9em;
+    color: #555;
+    margin-top: 5px;
+}
+
+        .detail-view {
+            display:none;
+            padding: 160px;
+            text-align: center;
+            background-color:antiquewhite;
+        }
+
+         .detail-view img {
+            width: 288px; 
+            height: 480px; 
+            max-width: 100%;
+            height: auto;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: transparent;
+            color: black;
+            text-shadow: 0 0 5px gold, 0 0 10px gold;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px red;
+            margin: 0 10px;
+        }
+
+        button:hover {
+            box-shadow: 0 0 20px red, 0 0 30px red;
+            transform: scale(1.1);
+        }
+
+        .back-button {
+            margin-top: 20px;
+            display: block;
+            color: black;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+	 </style>
+</head>
+<header>
+    <h1>Jewelry Collection</h1>
+    <nav>
+        <a href="website.html">Home</a>
+        <a href="webproduct.html">Products</a>
+        <a href="category.html"> Category</a>
+        <a href="webabout.html">About</a>
+       
+    </nav>
+</header>
+
+<body>
+   
+    <div class="product-grid" id="productGrid">
+        <!-- Jewelry products will be dynamically added here -->
+    </div>
+
+    <div class="detail-view" id="detailView">
+        <h2 id="detailTitle"></h2>
+        <img id="detailImage" src="" alt="Product Image">
+        <p class="price" id="detailPrice"></p>
+        <p id="detailDescription"></p>
+        <div class="button-container">
+            <button id="buyButton">Buy Now</button>
+            <button id="addToCartButton">Add to Cart</button>
+        </div>
+        <span class="back-button" id="backToProductsButton">Back to Products</span>
+    </div>
+
+   
+   
+
+    <script>
+        const products = [
+        { id: 21, title: "Aquamarine Necklace", price: 99.99, description: "Charming aquamarine necklace for a fresh look.", availableSizes: ["46 cm", "51 cm",],image: "https://www.charlesnobel.com/wp-content/uploads/2020/10/jpk409.jpg" },
+        { id: 22, title: "Citrine Necklace", price: 99.99, description: "Radiant citrine necklace, perfect for sunny days.", availableSizes: ["51 cm", "56 cm"], image: "https://i.etsystatic.com/10638925/r/il/8ed7c3/2805107587/il_fullxfull.2805107587_jaca.jpg" },
+        { id: 23, title: "Choker Necklace", price: 49.99, description: "Trendy choker necklace with stylish charms.", availableSizes: ["36 cm"],image: "https://www.claires.com/dw/image/v2/BBTK_PRD/on/demandware.static/-/Sites-master-catalog/default/dwe264242d/images/hi-res/64345_1.jpg?sw=2000&sh=2000&sm=fit" },
+        { id: 24, title: "Crystal Pendant", price: 49.99, description: "Dazzling crystal pendant that shines brightly.", availableSizes: ["12 mm"], image: "https://i.etsystatic.com/17496843/r/il/377151/2254435046/il_fullxfull.2254435046_h7qw.jpg" },
+        { id: 25, title: "Infinity Necklace", price: 69.99, description: "Meaningful infinity necklace, a symbol of love.", availableSizes: ["56 cm" , "61 cm"],  image: "https://www.jewelryfinds.com/siteuploads/photogalleryimg/21458_prod_2303-necklace-front.jpg" },
+         ];
+
+
+
+        
+        const productGrid = document.getElementById('productGrid');
+        const detailView = document.getElementById('detailView');
+        const detailTitle = document.getElementById('detailTitle');
+        const detailPrice = document.getElementById('detailPrice');
+        const detailDescription = document.getElementById('detailDescription');
+        const detailImage = document.getElementById('detailImage');
+        const buyButton = document.getElementById('buyButton');
+        const addToCartButton = document.getElementById('addToCartButton');
+        const backToProductsButton = document.getElementById('backToProductsButton');
+
+        let cart = [];
+
+        function createProductCard(product) {
+            const card = document.createElement('div');
+            card.classList.add('product');
+            card.innerHTML = `
+                <img src="${product.image}" alt="${product.title}">
+                <h3>${product.title}</h3>
+                <p class="price">$${product.price.toFixed(2)}</p>
+                <p class="description">${product.description}</p>
+                 <p class="sizes">Size: ${product.availableSizes.join(", ")}</p>
+            `;
+            card.onclick = () => showProductDetail(product);
+            productGrid.appendChild(card);
+        }
+
+        function showProductDetail(product) {
+            detailTitle.textContent = product.title;
+            detailPrice.textContent = `$${product.price.toFixed(2)}`;
+            detailDescription.textContent = product.description;
+            detailImage.src = product.image;
+
+            const sizesText = `Available Sizes: ${product.availableSizes.join(", ")}`;
+    const sizeElement = document.createElement('p');
+    sizeElement.textContent = sizesText;
+    sizeElement.className = 'sizes';
+    detailDescription.appendChild(sizeElement);
+
+
+            detailView.style.display = "block";
+            productGrid.style.display = "none"; // Hide product grid
+
+            buyButton.onclick = () => buyNow(product);
+            addToCartButton.onclick = () => addToCart(product);
+        }
+
+        function addToCart(product) {
+            cart.push(product);
+            alert(`${product.title} has been added to your cart!`);
+        }
+
+        function buyNow(product) {
+            alert(`Proceeding to buy ${product.title} for $${product.price.toFixed(2)}.`);
+        }
+
+        backToProductsButton.onclick = () => {
+            detailView.style.display = "none";
+            productGrid.style.display = "grid"; // Show product grid again
+        };
+
+        products.forEach(createProductCard);
+		
+    </script>
+</body>
+</html>
